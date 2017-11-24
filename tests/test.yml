@@ -1,0 +1,53 @@
+---
+- name: Test provisioning
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Building the test image
+      docker_image:
+        path: .
+        name: mstream/ubuntu
+        tag: 16.04
+        force: yes
+      tags:
+        - provision
+    - name: Creating the test container
+      docker_container:
+        name: "{{ test_container_name }}"
+        image: mstream/ubuntu:16.04
+        state: started
+        ports:
+        - "8080:8080"
+      tags:
+        - provision
+    - name: Adding created container to the hosts list
+      add_host:
+        name: "{{ test_container_name }}"
+        ansible_connection: docker
+        ansible_python_interpreter: /usr/bin/python3
+      tags:
+        - provision
+        - configure
+        - verify
+
+- name: Testing the role
+  hosts: "{{ test_container_name }}"
+  tasks:
+    - import_role:
+        name: jenkins-master
+      tags:
+        - configure
+    - import_tasks: specs.yml
+      tags:
+        - verify
+
+- name: Test cleaning up
+  tags:
+    - clean
+  hosts: localhost
+  tasks:
+    - name: Destroying the test container
+      docker_container:
+        name: "{{ test_container_name }}"
+        state: absent
+

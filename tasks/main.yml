@@ -1,0 +1,62 @@
+---
+- name: Add an apt key for the jenkins repository
+  apt_key:
+    url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
+    state: present
+
+- name: Add the jenkins repository
+  apt_repository:
+    repo: deb https://pkg.jenkins.io/debian-stable binary/
+    state: present
+
+- name: Install java
+  apt:
+    name: openjdk-8-jdk-headless
+    state: present
+
+- name: Install jenkins
+  apt:
+    name: jenkins
+    state: present
+
+- name: Disable jenkins setup wizard
+  replace:
+    path: /etc/default/jenkins
+    regexp: 'JAVA_ARGS="([^"]+)"'
+    replace: 'JAVA_ARGS="\1 -Djenkins.install.runSetupWizard=false"'
+
+- name: create jenkins init scripts directory
+  file:
+    path: /var/lib/jenkins/init.groovy.d
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+    state: directory
+
+- name: copying the security setup script
+  template:
+    src: files/security.groovy.j2
+    dest: /var/lib/jenkins/init.groovy.d/security.groovy
+    owner: jenkins
+    group: jenkins
+    mode: 0644
+
+- name: Start jenkins
+  service:
+    name: jenkins
+    state: started
+
+- name: Wait until jenkins is ready
+  wait_for:
+    path: /var/log/jenkins/jenkins.log
+    search_regex: Jenkins is fully up and running
+
+- name: Download jenkins cli jar
+  get_url:
+    url: http://localhost:8080/jnlpJars/jenkins-cli.jar
+    dest: /
+    mode: 0440
+
+
+
+

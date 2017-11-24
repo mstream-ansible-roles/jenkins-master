@@ -1,0 +1,15 @@
+galaxy_info:
+  author: Maciej Laciak
+  description: jenkins master role
+  license: MIT
+  min_ansible_version: 2.4
+
+  platforms:
+    - name: Debian
+      versions:
+        - jessie
+
+  galaxy_tags:
+    - jenkins
+
+

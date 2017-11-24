@@ -1,0 +1,15 @@
+---
+- name: Load default variables of the role
+  include_vars:
+    dir: 'roles/jenkins-master/vars'
+    
+- name: Check the jenkins-cli can connect to the master anonymously
+  shell: java -jar /jenkins-cli.jar -s http://localhost:8080 who-am-i
+  register: result
+  failed_when: "'Authenticated as: anonymous' not in result.stdout"
+
+- name: Check the jenkins-cli can connect to the master as admin
+  shell: java -jar /jenkins-cli.jar -s http://localhost:8080 -auth {{ admin_username }}:{{ admin_password }} who-am-i
+  register: result
+  failed_when: "'Authenticated as: admin' not in result.stdout"
+
