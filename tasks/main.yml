@@ -1,4 +1,16 @@
 ---
+- set_fact:
+    restart_timeout: 30
+    admin_cli_cmd: "java -jar /jenkins-cli.jar -s http://localhost:8080 -auth {{ admin_username }}:{{ admin_password }}"
+    
+- name: Check required variables
+  fail: "{{ item }} undefined"
+  when: "item is not defined"
+  with_items:
+    - admin_username
+    - admin_password
+    - plugins
+
 - name: Add an apt key for the jenkins repository
   apt_key:
     url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
@@ -46,16 +58,35 @@
     name: jenkins
     state: started
 
-- name: Wait until jenkins is ready
+- name: Wait until jenkins is started
   wait_for:
     path: /var/log/jenkins/jenkins.log
     search_regex: Jenkins is fully up and running
+    timeout: "{{ restart_timeout }}"
 
 - name: Download jenkins cli jar
   get_url:
     url: http://localhost:8080/jnlpJars/jenkins-cli.jar
     dest: /
     mode: 0440
+
+- name: Install plugins
+  shell: "{{ admin_cli_cmd }} install-plugin {{ item }}"
+  with_items: "{{ plugins }}"
+
+- name: Restart jenkins
+  shell: "{{ admin_cli_cmd }} safe-restart"
+
+- name: Wait until jenkins is restarted
+  shell: "{{ admin_cli_cmd }} who-am-i"
+  ignore_errors: yes
+  register: result
+  until: "'Authenticated as: admin' in result.stdout"
+  delay: 1
+  retries: "{{ restart_timeout }}"
+
+  
+
 
 
 

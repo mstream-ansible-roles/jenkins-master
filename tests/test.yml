@@ -32,6 +32,12 @@
 
 - name: Testing the role
   hosts: "{{ test_container_name }}"
+  vars:
+    admin_username: admin
+    admin_password: admin123
+    plugins:
+      - git
+      - job-dsl
   tasks:
     - import_role:
         name: jenkins-master
