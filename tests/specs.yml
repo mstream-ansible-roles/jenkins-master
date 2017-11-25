@@ -24,3 +24,14 @@
   when: "item not in result.stdout"
   with_items: "{{ plugins }}"
 
+- name: Fetch the list of existing jobs
+  shell: "{{ admin_cli_cmd }} list-jobs"
+  register: result
+
+- name: Check all jobs have been created successfuly
+  fail: "{{ item }} job not created"
+  when: "item not in result.stdout"
+  with_items:
+    - seed
+    - seed_job_test
+

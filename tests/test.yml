@@ -38,6 +38,8 @@
     plugins:
       - git
       - job-dsl
+    seed_dsl_path: files/seed_dsl.groovy
+    seed_job_name: seed
   tasks:
     - import_role:
         name: jenkins-master

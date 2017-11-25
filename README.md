@@ -12,10 +12,15 @@ Requirements
 Role Variables
 --------------
 
-admin_username: admin username (defaults to 'admin')
+admin_username: admin username
 
-admin_password: admin password (defaults to 'admin')
+admin_password: admin password
 
+plugins: list of plugins to be installed
+
+seed_job_path: path to the job-dsl plugin script to bootstrap other jobs (optional)
+
+seed_job_name: name of the seed job (optional, defaults to 'seed')
 
 Dependencies
 ------------

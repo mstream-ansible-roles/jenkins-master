@@ -4,3 +4,5 @@
 # admin_username: 
 # admin_password: 
 # plugins: []
+
+seed_job_name: seed

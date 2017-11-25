@@ -1,5 +1,6 @@
 !tests/roles/jenkins-master
 tests/roles/*
 *~
+*#*
 *.retry
 .roles

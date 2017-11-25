@@ -1,8 +1,4 @@
 ---
-- set_fact:
-    restart_timeout: 30
-    admin_cli_cmd: "java -jar /jenkins-cli.jar -s http://localhost:8080 -auth {{ admin_username }}:{{ admin_password }}"
-    
 - name: Check required variables
   fail: "{{ item }} undefined"
   when: "item is not defined"
@@ -10,6 +6,10 @@
     - admin_username
     - admin_password
     - plugins
+
+- set_fact:
+    restart_timeout: 30
+    admin_cli_cmd: "java -jar /jenkins-cli.jar -s http://localhost:8080 -auth {{ admin_username }}:{{ admin_password }}"
 
 - name: Add an apt key for the jenkins repository
   apt_key:
@@ -70,6 +70,10 @@
     dest: /
     mode: 0440
 
+- set_fact:
+    plugins: "{{ plugins + ['job-dsl'] }}"
+    when: seed_dsl_path is defined
+
 - name: Install plugins
   shell: "{{ admin_cli_cmd }} install-plugin {{ item }}"
   with_items: "{{ plugins }}"
@@ -84,6 +88,9 @@
   until: "'Authenticated as: admin' in result.stdout"
   delay: 1
   retries: "{{ restart_timeout }}"
+
+- include_tasks: "seed_job.yml"
+  when: seed_dsl_path is defined
 
   
 

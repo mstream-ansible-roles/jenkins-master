@@ -1,0 +1,27 @@
+---
+- name: Check required variables
+  fail: "{{ item }} undefined"
+  when: "item is not defined"
+  with_items:
+    - seed_dsl_path
+
+- set_fact:
+    seed_dsl_content: "{{ lookup('file', seed_dsl_path) }}"
+    seed_job_name: seed
+
+- name: create the seed job definition file
+  template:
+    src: files/seed_job.xml.j2
+    dest: /seed_job.xml
+
+- name: remove the old seed job
+  shell: "{{ admin_cli_cmd }} delete-job {{ seed_job_name }}"
+  ignore_errors: yes
+
+- name: create the seed job
+  shell: "cat /seed_job.xml | {{ admin_cli_cmd }} create-job {{ seed_job_name }}"
+
+- name: run the seed job
+  shell: "{{ admin_cli_cmd }} build {{ seed_job_name }} -f"
+
+
