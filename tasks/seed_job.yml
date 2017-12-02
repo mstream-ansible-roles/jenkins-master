@@ -22,6 +22,6 @@
   shell: "cat /seed_job.xml | {{ admin_cli_cmd }} create-job {{ seed_job_name }}"
 
 - name: run the seed job
-  shell: "{{ admin_cli_cmd }} build {{ seed_job_name }} -f"
+  shell: "{{ admin_cli_cmd }} build seed_job_test -f"
 
 

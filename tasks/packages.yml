@@ -1,0 +1,13 @@
+---
+- name: install maven
+  apt:
+    name: maven
+    state: present
+    update_cache: yes
+
+
+- name: install git
+  apt:
+    name: git
+    state: present
+  when: "'git' in plugins"

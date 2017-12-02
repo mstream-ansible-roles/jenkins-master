@@ -35,3 +35,6 @@
     - seed
     - seed_job_test
 
+- name: run the seed test job
+  shell: "{{ admin_cli_cmd }} build {{ seed_job_name }} -f"
+

@@ -24,3 +24,9 @@ Jenkins
   .getInjector()
   .getInstance(AdminWhitelistRule.class)
   .setMasterKillSwitch(false)
+
+Jenkins
+  .instance
+  .getDescriptor("jenkins.CLI")
+  .get()
+  .setEnabled(false)

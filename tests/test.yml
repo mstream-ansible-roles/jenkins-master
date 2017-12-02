@@ -38,6 +38,11 @@
     plugins:
       - git
       - job-dsl
+    tools:
+      - name: maven3
+        url: http://www-eu.apache.org/dist/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz
+        subdir: apache-maven-3.5.2
+        bin: bin
     seed_dsl_path: files/seed_dsl.groovy
     seed_job_name: seed
   tasks:

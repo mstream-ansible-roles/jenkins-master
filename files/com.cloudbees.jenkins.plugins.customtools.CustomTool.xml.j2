@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.cloudbees.jenkins.plugins.customtools.CustomTool_-DescriptorImpl>
+  <installations class="com.cloudbees.jenkins.plugins.customtools.CustomTool-array">
+    {% for item in tools %}
+      <com.cloudbees.jenkins.plugins.customtools.CustomTool>
+        <name>{{ item.name }}</name>
+        <home></home>
+        <properties>
+          <hudson.tools.InstallSourceProperty>
+            <installers>
+              <hudson.tools.ZipExtractionInstaller>
+                <url>{{ item.url }}</url>
+                <subdir>{{ item.subdir }}</subdir>
+              </hudson.tools.ZipExtractionInstaller>
+            </installers>
+          </hudson.tools.InstallSourceProperty>
+        </properties>
+        <exportedPaths>{{ item.bin }}</exportedPaths>
+        <additionalVariables></additionalVariables>
+      </com.cloudbees.jenkins.plugins.customtools.CustomTool>
+    {% endfor %}
+  </installations>
+</com.cloudbees.jenkins.plugins.customtools.CustomTool_-DescriptorImpl>

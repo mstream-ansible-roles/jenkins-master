@@ -8,6 +8,9 @@ Requirements
 
 * ansible 2.0+
 * docker daemon
+* docker-py
+* jinja2
+* pyyaml
 
 Role Variables
 --------------
@@ -17,6 +20,8 @@ admin_username: admin username
 admin_password: admin password
 
 plugins: list of plugins to be installed
+
+tools: list of plugins to be installed
 
 seed_job_path: path to the job-dsl plugin script to bootstrap other jobs (optional)
 
@@ -33,7 +38,7 @@ Example Playbook
 ```
 - hosts: servers
   roles:
-    - { role: jenkins-master, admin_username: 'admin', admin_password: 'admin' }
+    - { role: jenkins-master, admin_username: 'admin', admin_password: 'admin', plugins: ['git'], tools: [] }
 ```
 
 License

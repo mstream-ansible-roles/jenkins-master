@@ -1,0 +1,8 @@
+---
+- name: create the custom tool definition list
+  template:
+    src: files/com.cloudbees.jenkins.plugins.customtools.CustomTool.xml.j2
+    dest: "{{ jenkins_home }}/com.cloudbees.jenkins.plugins.customtools.CustomTool.xml"
+
+- name: reaload the jenkins configuration
+  shell: "{{ admin_cli_cmd }} reload-configuration"
