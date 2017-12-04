@@ -4,5 +4,15 @@
     src: files/com.cloudbees.jenkins.plugins.customtools.CustomTool.xml.j2
     dest: "{{ jenkins_home }}/com.cloudbees.jenkins.plugins.customtools.CustomTool.xml"
 
-- name: reaload the jenkins configuration
-  shell: "{{ admin_cli_cmd }} reload-configuration"
+
+- name: Restart jenkins
+  shell: "{{ admin_cli_cmd }} safe-restart"
+
+
+- name: Wait until jenkins is restarted
+  shell: "{{ admin_cli_cmd }} who-am-i"
+  ignore_errors: yes
+  register: result
+  until: "'Authenticated as: admin' in result.stdout"
+  delay: 1
+  retries: "{{ restart_timeout }}"
