@@ -11,5 +11,7 @@ galaxy_info:
 
   galaxy_tags:
     - jenkins
+    
+  dependencies: []
 
 
